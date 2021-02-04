@@ -41,11 +41,19 @@ traffic_stats/traffic_stats
 misc/traffic-control-cdn/downloads/*.rpm
 traffic_router/*/*.log
 traffic_router/*.log
+vendor/**/appveyor.yml
+vendor/**/.gitattributes
+vendor/**/.gitignore
+vendor/**/.gitmodules
+vendor/golang.org/
+vendor/**/*.sh
+vendor/**/.travis.yml
 .dbInfo
 /dist
 *.pyc
 bin/docker-compose
-/.m2
+/.m2/
+/.npm/
 /.github/actions/**/node_modules/
 # local storage for cdn-in-a-box Carton packages
 local.tar.gz
