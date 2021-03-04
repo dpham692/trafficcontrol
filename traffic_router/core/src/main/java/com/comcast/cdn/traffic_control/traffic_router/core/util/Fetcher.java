@@ -78,7 +78,7 @@ public class Fetcher {
 		return getConnection(url, data, requestMethod, lastFetchTime, null);
 	}
 
-	@SuppressWarnings("PMD.CyclomaticComplexity")
+	@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
 	protected HttpURLConnection getConnection(final String url, final String data, final String requestMethod, final long lastFetchTime, final String contentType) throws IOException {
 		HttpURLConnection http = null;
 		try {
@@ -132,6 +132,9 @@ public class Fetcher {
 				}
 			}
 
+			if (url.contains("letsencrypt")) {
+				return http;
+			}
 			connection.connect();
 
 		} catch (Exception e) {

@@ -17,17 +17,12 @@ package com.comcast.cdn.traffic_control.traffic_router.core.dns;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.OptionalLong;
 
-import org.apache.log4j.Logger;
 import org.xbill.DNS.Name;
-import org.xbill.DNS.RRSIGRecord;
 import org.xbill.DNS.Record;
 
 public class SignedZoneKey extends ZoneKey {
-	private static final Logger LOGGER = Logger.getLogger(SignedZoneKey.class);
-
-	private Calendar minimumSignatureExpiration;
+	private Calendar signatureExpiration;
 	private Calendar kskExpiration;
 	private Calendar zskExpiration;
 
@@ -36,27 +31,16 @@ public class SignedZoneKey extends ZoneKey {
 		super(name, records);
 	}
 
-	public Calendar getMinimumSignatureExpiration() {
-		return minimumSignatureExpiration;
+	public Calendar getSignatureExpiration() {
+		return signatureExpiration;
 	}
 
-	public void setMinimumSignatureExpiration(final List<Record> signedRecords, final Calendar defaultExpiration) {
-		final OptionalLong minSignatureExpiration = signedRecords.stream()
-				.filter(r -> r instanceof RRSIGRecord)
-				.mapToLong(r -> ((RRSIGRecord) r).getExpire().getTime())
-				.min();
-		if (!minSignatureExpiration.isPresent()) {
-			LOGGER.error("unable to calculate minimum signature expiration: no RRSIG records given");
-			this.minimumSignatureExpiration = defaultExpiration;
-			return;
-		}
-		final Calendar tmp = Calendar.getInstance();
-		tmp.setTimeInMillis(minSignatureExpiration.getAsLong());
-		this.minimumSignatureExpiration = tmp;
+	public void setSignatureExpiration(final Calendar signatureExpiration) {
+		this.signatureExpiration = signatureExpiration;
 	}
 
 	public long getSignatureDuration() {
-		return this.minimumSignatureExpiration.getTimeInMillis() - getTimestamp();
+		return this.signatureExpiration.getTimeInMillis() - getTimestamp();
 	}
 
 	public long getRefreshHorizon() {
