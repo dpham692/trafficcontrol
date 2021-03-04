@@ -20,7 +20,7 @@ set -ex;
 
 cd infrastructure/cdn-in-a-box;
 tests_service='tr-integration-test';
-other_services='dns edge enroller mid-01 mid-02 origin trafficmonitor trafficops trafficrouter trafficvault';
+other_services='dns edge enroller mid-01 mid-02 origin static trafficmonitor trafficops trafficrouter trafficvault';
 docker_compose='docker-compose -f ./docker-compose.yml -f ./docker-compose.traffic-router-test.yml';
 $docker_compose up -d $tests_service $other_services;
 
