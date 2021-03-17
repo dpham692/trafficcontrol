@@ -1,3 +1,5 @@
+package toreq
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,5 +19,20 @@
  * under the License.
  */
 
-module.exports = angular.module('trafficPortal.form.serverCapability.view', [])
-	.controller('FormViewServerCapabilityController', require('./FormViewServerCapabilityController'));
+import (
+	"github.com/apache/trafficcontrol/lib/go-atscfg"
+	"github.com/apache/trafficcontrol/lib/go-tc"
+)
+
+func serversToLatest(svs tc.ServersV3Response) ([]atscfg.Server, error) {
+	return atscfg.ToServers(svs.Response), nil
+}
+
+func serverToLatest(oldSv *tc.ServerV30) (*atscfg.Server, error) {
+	asv := atscfg.Server(*oldSv)
+	return &asv, nil
+}
+
+func dsesToLatest(dses []tc.DeliveryServiceNullableV30) []atscfg.DeliveryService {
+	return atscfg.V30ToDeliveryServices(dses)
+}
