@@ -197,7 +197,7 @@ func (r *TrafficOpsReq) checkConfigFile(cfg *ConfigFile, filesAdding []string) e
 		return nil
 	}
 
-	if !util.MkDir(cfg.Dir, r.Cfg) {
+	if !util.MkDirWithOwner(cfg.Dir, r.Cfg, &cfg.Uid, &cfg.Gid) {
 		return errors.New("Unable to create the directory '" + cfg.Dir + " for " + "'" + cfg.Name + "'")
 	}
 
@@ -479,7 +479,7 @@ func (r *TrafficOpsReq) replaceCfgFile(cfg *ConfigFile) error {
 	// If we just wrote to the real location and the app or OS or anything crashed,
 	// we'd end up with malformed files.
 
-	if err := ioutil.WriteFile(tmpFileName, cfg.Body, 0644); err != nil {
+	if _, err := util.WriteFileWithOwner(tmpFileName, cfg.Body, &cfg.Uid, &cfg.Gid, 0644); err != nil {
 		return errors.New("Failed to write temp config file '" + tmpFileName + "': " + err.Error())
 	}
 
@@ -752,7 +752,7 @@ func (r *TrafficOpsReq) CheckSyncDSState() (UpdateStatus, error) {
 	if r.Cfg.RunMode == t3cutil.ModeSyncDS || r.Cfg.RunMode == t3cutil.ModeBadAss || r.Cfg.RunMode == t3cutil.ModeReport {
 		serverStatus, err := getUpdateStatus(r.Cfg)
 		if err != nil {
-			log.Errorln(err)
+			log.Errorln("getting '" + r.Cfg.CacheHostName + "' update status: " + err.Error())
 			return updateStatus, err
 		}
 
